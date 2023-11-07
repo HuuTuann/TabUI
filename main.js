@@ -1,83 +1,33 @@
-var familyMemberAPI = "http://localhost:3000/familyMember";
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
 
-function start() {
-    getFamilyMember(renderFamilyMember);
-    deleteFamilyMember();
-    // getFamilyMember((familyMembers) => renderFamilyMember(familyMembers));
+const tabs = $$(".tab-item");
+const panes = $$(".tab-pane");
+
+const tabActive = $(".tab-item.active");
+const line = $(".tabs .line");
+
+function moveLine(tabActive) {
+    line.style.left = tabActive.offsetLeft + "px";
+    line.style.width = tabActive.offsetWidth + "px";
 }
 
-start();
+moveLine(tabActive, panes[0]);
 
-function getFamilyMember(familyMembers) {
-    return fetch(familyMemberAPI)
-        .then((response) => response.json())
-        .then(familyMembers);
+function addActive(tabActive, pane) {
+    $(".tab-item.active").classList.remove("active");
+    tabActive.classList.add("active");
+
+    $(".tab-pane.active").classList.remove("active");
+    pane.classList.add("active");
+
+    moveLine(tabActive);
 }
 
-function renderFamilyMember(familyMembers) {
-    familyMembers.forEach((familyMember) =>
-        HandleCreateHTMLFamilyMember(familyMember)
-    );
-}
+tabs.forEach((tab, index) => {
+    const pane = panes[index];
 
-function HandleCreateHTMLFamilyMember(familyMember) {
-    document.querySelector(
-        ".member-family-list"
-    ).innerHTML += `<li class="familyMembers-${familyMember.id}">
-                        <h4>Họ và Tên: ${familyMember.name}</h4>
-                        <p>Tuổi: ${familyMember.age}</p>
-                        <button class="deleteFamilyMember">Delete</button>
-                    </li>`;
-}
-
-function handleDelete(id) {
-    // const myInit = {
-    //     method: "DELETE",
-    //     headers: {
-    //         "Content-Type": "application/json",
-    //     },
-    // };
-    // return fetch(familyMemberAPI, myInit)
-    //     .then((response) => response.json())
-    //     .then((newFamilyMember) =>
-    //         HandleCreateHTMLFamilyMember(newFamilyMember)
-    //     );
-    alert();
-}
-
-document
-    .querySelector(".createFamilyMember")
-    .addEventListener("click", function () {
-        var name = document.querySelector("input[name='name']").value;
-        var age = document.querySelector("input[name='age']").value;
-        var familyMember = {
-            name: name,
-            age: age,
-        };
-        createFamilyMember(familyMember);
+    tab.addEventListener("click", function () {
+        addActive(this, pane);
     });
-
-function createFamilyMember(familyMember) {
-    const myInit = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(familyMember),
-    };
-    return fetch(familyMemberAPI, myInit)
-        .then((response) => response.json())
-        .then((newFamilyMember) =>
-            HandleCreateHTMLFamilyMember(newFamilyMember)
-        );
-}
-
-function deleteFamilyMember() {
-    alert("hi");
-    document.querySelectorAll(".deleteFamilyMember").map((button) => {
-        button.addEventListener("click", function () {
-            alert("Hi");
-        });
-    });
-    alert("hi");
-}
+});
