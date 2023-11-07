@@ -12,7 +12,7 @@ function moveLine(tabActive) {
     line.style.width = tabActive.offsetWidth + "px";
 }
 
-moveLine(tabActive, panes[0]);
+moveLine(tabActive);
 
 function addActive(tabActive, pane) {
     $(".tab-item.active").classList.remove("active");
